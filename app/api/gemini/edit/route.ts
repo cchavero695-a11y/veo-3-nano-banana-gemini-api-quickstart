@@ -1,11 +1,12 @@
+import { GEMINI_API_KEY, pickImageModel } from "@/lib/apiKey";
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error("GEMINI_API_KEY environment variable is not set.");
+if (!GEMINI_API_KEY) {
+  throw new Error("Set GEMINI_PAID_API_KEY (or GEMINI_API_KEY).");
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 export async function POST(req: Request) {
   try {
@@ -105,7 +106,7 @@ export async function POST(req: Request) {
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-image",
+      model: pickImageModel(form.get("model")),
       contents: contents,
     });
 

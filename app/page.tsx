@@ -28,12 +28,12 @@ const VeoStudio: React.FC = () => {
   const [prompt, setPrompt] = useState(""); // Video or image prompt
   const [negativePrompt, setNegativePrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [selectedModel, setSelectedModel] = useState("veo-3.0-generate-001");
+  const [selectedModel, setSelectedModel] = useState("veo-3.1-fast-generate-preview");
 
   // Update selected model when mode changes
   useEffect(() => {
     if (mode === "create-video") {
-      setSelectedModel("veo-3.0-generate-001");
+      setSelectedModel("veo-3.1-fast-generate-preview");
     } else if (mode === "edit-image" || mode === "compose-image") {
       setSelectedModel("gemini-2.5-flash-image");
     } else if (mode === "create-image") {
@@ -269,7 +269,7 @@ const VeoStudio: React.FC = () => {
       const resp = await fetch("/api/gemini/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: imagePrompt }),
+        body: JSON.stringify({ prompt: imagePrompt, model: selectedModel }),
       });
 
       if (!resp.ok) {
@@ -295,7 +295,7 @@ const VeoStudio: React.FC = () => {
       console.log("Resetting Gemini busy state");
       setGeminiBusy(false);
     }
-  }, [imagePrompt]);
+  }, [imagePrompt, selectedModel]);
 
   // Gemini image edit helper
   const editWithGemini = useCallback(async () => {
@@ -305,6 +305,7 @@ const VeoStudio: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", editPrompt);
+      form.append("model", selectedModel);
 
       if (imageFile) {
         form.append("imageFile", imageFile);
@@ -342,7 +343,7 @@ const VeoStudio: React.FC = () => {
       console.log("Resetting Gemini busy state after edit");
       setGeminiBusy(false);
     }
-  }, [editPrompt, imageFile, generatedImage]);
+  }, [editPrompt, imageFile, generatedImage, selectedModel]);
 
   // Gemini image compose helper
   const composeWithGemini = useCallback(async () => {
@@ -351,6 +352,7 @@ const VeoStudio: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", composePrompt);
+      form.append("model", selectedModel);
 
       // Add newly uploaded images first
       for (const file of multipleImageFiles) {
@@ -410,7 +412,7 @@ const VeoStudio: React.FC = () => {
       console.log("Resetting Gemini busy state after compose");
       setGeminiBusy(false);
     }
-  }, [composePrompt, multipleImageFiles, imageFile, generatedImage]);
+  }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedModel]);
 
   // Start generation based on current mode
   const startGeneration = useCallback(async () => {

@@ -1,11 +1,12 @@
+import { GEMINI_API_KEY } from "@/lib/apiKey";
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error("GEMINI_API_KEY environment variable is not set.");
+if (!GEMINI_API_KEY) {
+  throw new Error("Set GEMINI_PAID_API_KEY (or GEMINI_API_KEY).");
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 export async function POST(req: Request) {
   try {

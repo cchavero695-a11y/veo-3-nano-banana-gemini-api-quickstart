@@ -1,11 +1,12 @@
+import { GEMINI_API_KEY } from "@/lib/apiKey";
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error("GEMINI_API_KEY environment variable is not set.");
+if (!GEMINI_API_KEY) {
+  throw new Error("Set GEMINI_PAID_API_KEY (or GEMINI_API_KEY).");
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 export async function POST(req: Request) {
   try {
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     const form = await req.formData();
 
     const prompt = (form.get("prompt") as string) || "";
-    const model = (form.get("model") as string) || "veo-3.0-generate-001";
+    const model = (form.get("model") as string) || "veo-3.1-fast-generate-preview";
     const negativePrompt = (form.get("negativePrompt") as string) || undefined;
     const aspectRatio = (form.get("aspectRatio") as string) || undefined;
 

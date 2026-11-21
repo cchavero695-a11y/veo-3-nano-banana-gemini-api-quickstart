@@ -1,7 +1,8 @@
+import { GEMINI_API_KEY } from "@/lib/apiKey";
 import { NextResponse } from "next/server";
 
-if (!process.env.GEMINI_API_KEY) {
-  throw new Error("GEMINI_API_KEY environment variable is not set.");
+if (!GEMINI_API_KEY) {
+  throw new Error("Set GEMINI_PAID_API_KEY (or GEMINI_API_KEY).");
 }
 
 export async function POST(req: Request) {
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
 
     const resp = await fetch(uri, {
       headers: {
-        "x-goog-api-key": process.env.GEMINI_API_KEY as string,
+        "x-goog-api-key": GEMINI_API_KEY,
         Accept: "*/*",
       },
       redirect: "follow",
