@@ -27,7 +27,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
       ];
     } else {
       // For image modes
-      return ["gemini-2.5-flash-image-preview", "imagen-4.0-fast-generate-001"];
+      return ["gemini-2.5-flash-image", "imagen-4.0-fast-generate-001"];
     }
   };
 
